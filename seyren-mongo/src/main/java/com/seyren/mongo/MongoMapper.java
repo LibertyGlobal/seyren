@@ -55,6 +55,10 @@ public class MongoMapper {
         for (Object o : list) {
             subscriptions.add(subscriptionFrom((DBObject) o));
         }
+        DateTime timeFirstErrorOccured = getDateTime(dbo, "timeFirstErrorOccured");
+        DateTime timeLastNotificationSent = getDateTime(dbo, "timeLastNotificationSent");
+        BigDecimal notificationDelay = getBigDecimal(dbo, "notificationDelay");
+        BigDecimal notificationInterval = getBigDecimal(dbo, "notificationInterval");
         
         return new Check().withId(id)
                 .withName(name)
@@ -69,7 +73,11 @@ public class MongoMapper {
                 .withAllowNoData(allowNoData)
                 .withState(state)
                 .withLastCheck(lastCheck)
-                .withSubscriptions(subscriptions);
+                .withSubscriptions(subscriptions)
+                .withTimeFirstErrorOccured(timeFirstErrorOccured)
+                .withTimeLastNotificationSent(timeLastNotificationSent)
+                .withNotificationDelay(notificationDelay)
+                .withNotificationInterval(notificationInterval);
     }
     
     public Subscription subscriptionFrom(DBObject dbo) {
@@ -178,6 +186,19 @@ public class MongoMapper {
 
             map.put("subscriptions", dbSubscriptions);
         }
+        if (check.getTimeFirstErrorOccured() != null) {
+            map.put("timeFirstErrorOccured", new Date(check.getTimeFirstErrorOccured().getMillis()));
+        }
+        if (check.getTimeLastNotificationSent() != null) {
+            map.put("timeLastNotificationSent", new Date(check.getTimeLastNotificationSent().getMillis()));
+        }
+        if (check.getNotificationDelay() != null) {
+            map.put("notificationDelay", check.getNotificationDelay().toPlainString());            
+        }        
+        if (check.getNotificationInterval() != null) {
+            map.put("notificationInterval", check.getNotificationInterval().toPlainString());            
+        }
+
         return map;
     }
     
