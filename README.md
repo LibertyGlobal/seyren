@@ -53,6 +53,7 @@ The following options can be supplied as system properties or environment variab
 * `SEYREN_LOG_FILE_LEVEL` - The level of messages logged to the `file` appender (must correspond to a [Logback](http://logback.qos.ch/) log level. So one of `trace`, `debug`, `info`, `warn` or `error`). Default: `info`.
 * `SEYREN_THREADS` - The number of pooled check threads to start. Default: `8`
 * `GRAPHS_ENABLE` - Show(true) or hide(false) graphs in check page. Default: `true`.
+* `SEYREN_NOTIFICATION_DELAY` - sends delay notification. Default is 0. 
 
 ##### [Graphite](http://graphite.readthedocs.org/en/latest/)
 * `GRAPHITE_URL` - The location of your Graphite server. Default: `http://localhost:80`
