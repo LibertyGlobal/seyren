@@ -53,8 +53,8 @@ public class Check {
     private List<Subscription> subscriptions = new ArrayList<Subscription>();
     private DateTime timeFirstErrorOccured;
     private DateTime timeLastNotificationSent;
-    private BigDecimal notificationDelay;
-    private BigDecimal notificationInterval;
+    private Boolean errorNotificationIsSent;    
+    private BigDecimal notificationDelay;;
     private String tag;
     private String graphiteSourceUrl;
     
@@ -284,16 +284,14 @@ public class Check {
         setNotificationDelay(notificationDelay);
         return this;
     }
-    @JsonSerialize(using = BigDecimalSerializer.class)    
-    public BigDecimal getNotificationInterval () {
-        return notificationInterval;
+    public boolean errorNotificationIsSent () {
+        return errorNotificationIsSent;
     }
-    @JsonDeserialize(using = BigDecimalDeserializer.class)
-    public void setNotificationInterval (BigDecimal notificationInterval) {
-        this.notificationInterval = notificationInterval;
+    public void setErrorNotificationIsSent (Boolean errorNotificationIsSent) {
+        this.errorNotificationIsSent = errorNotificationIsSent;
     }
-    public Check withNotificationInterval (BigDecimal notificationInterval) {
-        setNotificationInterval(notificationInterval);
+    public Check withErrorNotificationIsSent (Boolean errorNotificationIsSent) {
+        setErrorNotificationIsSent(errorNotificationIsSent);
         return this;
     }    
     public String getTag() {

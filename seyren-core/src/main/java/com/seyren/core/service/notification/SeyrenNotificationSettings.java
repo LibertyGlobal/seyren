@@ -18,6 +18,7 @@
  */
 package com.seyren.core.service.notification;
 
+import com.seyren.core.domain.Alert;
 import com.seyren.core.domain.AlertType;
 import com.seyren.core.util.config.SeyrenConfig;
 import javax.inject.Inject;
@@ -43,6 +44,7 @@ public class SeyrenNotificationSettings implements NotificationServiceSettings {
     
     @Override
     public boolean applyNotificationDelayAndIntervalProperties(Check check, AlertType lastState, AlertType currentState, DateTime now) {
+        System.out.println("ApplySettings");
         Boolean notificationShouldBeSent = false;
         long delayInSeconds;
         long seyrenNotificationIntervalInSeconds;
@@ -63,34 +65,17 @@ public class SeyrenNotificationSettings implements NotificationServiceSettings {
             delayInSeconds = check.getNotificationDelay().longValue();
         }
         
-        if (check.getNotificationInterval() != null) {
-            seyrenNotificationIntervalInSeconds = check.getNotificationInterval().longValue();            
-        }
-        
         // State is still error and must exist longer than delayInSeconds
         if (stateIsTheSame(lastState, currentState) && currentState == AlertType.ERROR && timeElapsedSinceFirstErrorOccured > delayInSeconds) {
-            long timeSinceLastNotificationInSeconds = check.getTimeLastNotificationSent() == null ? seyrenNotificationIntervalInSeconds : (now.getMillis() - check.getTimeLastNotificationSent().getMillis()) / 1000;
+            System.out.println("Delay is passed");
+            notificationShouldBeSent = true;
 
-            // Time since the first error is not longer ago than the interval and no notification has been sent
-            // if (timeElapsedSinceFirstErrorOccured > seyrenNotificationIntervalInSeconds && check.getTimeLastNotificationSent() == null) {
-            if (check.getTimeLastNotificationSent() == null) {
-                check.setTimeLastNotificationSent(now);
-                checksStore.updateTimeLastNotification(check.getId(), now);
-                notificationShouldBeSent = true;
-            }
-            
-            // Last notification is also greater than interval and first notification has been sent
-            if (timeSinceLastNotificationInSeconds > seyrenNotificationIntervalInSeconds) {
-                check.setTimeLastNotificationSent(now);
-                checksStore.updateTimeLastNotification(check.getId(), now);
-                notificationShouldBeSent = true;
-            }
         }
 
         // Also send notification if the state changes from ERROR to OK
         if (currentState == AlertType.OK && lastState == AlertType.ERROR && timeElapsedSinceFirstErrorOccured > delayInSeconds) {
+            System.out.println("Error in OK state");
             notificationShouldBeSent = true;
-            check.setTimeLastNotificationSent(null);
         }
 
         return notificationShouldBeSent;

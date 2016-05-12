@@ -80,6 +80,9 @@ public class ChecksBean implements ChecksResource {
         if (stored == null) {
             return Response.status(Status.NOT_FOUND).build();
         }
+        System.out.println("update check");
+        //check.setErrorNotificationIsSent(false);
+        System.out.println(check.errorNotificationIsSent());
         stored = checksStore.saveCheck(check);
         return Response.ok(stored).build();
     }

@@ -254,7 +254,8 @@ public class MongoStore implements ChecksStore, AlertsStore, SubscriptionsStore 
     @Override
     public Check saveCheck(Check check) {
         DBObject findObject = forId(check.getId());
-        
+        System.out.println("saveCheck");
+        System.out.println(check.errorNotificationIsSent());
         DateTime lastCheck = check.getLastCheck();
         DateTime timeFirstErrorOccured = check.getTimeFirstErrorOccured();
 
@@ -272,7 +273,7 @@ public class MongoStore implements ChecksStore, AlertsStore, SubscriptionsStore 
                 .with("state", check.getState().toString())
                 .with("timeFirstErrorOccured", timeFirstErrorOccured == null ? null : new Date(timeFirstErrorOccured.getMillis()))
                 .with("notificationDelay", check.getNotificationDelay() == null ? null : check.getNotificationDelay().toPlainString())
-                .with("notificationInterval", check.getNotificationInterval() == null ? null : check.getNotificationInterval().toPlainString())
+                .with("errorNotificationIsSent", check.errorNotificationIsSent())
                 .with("tag", check.getTag())
                 .with("graphiteSourceUrl", check.getGraphiteSourceUrl());
         
@@ -311,10 +312,11 @@ public class MongoStore implements ChecksStore, AlertsStore, SubscriptionsStore 
     }
     
     @Override
-    public Check updateTimeLastNotification(String checkId, DateTime timeLastNotificationSent) {
+    public Check updateTimeLastNotification(String checkId, DateTime timeLastNotificationSent, Boolean errorNotificationIsSent) {
         DBObject findObject = forId(checkId);
         
-        DBObject partialObject = object("timeLastNotificationSent", new Date(timeLastNotificationSent.getMillis()));
+        DBObject partialObject = object("timeLastNotificationSent", new Date(timeLastNotificationSent.getMillis()))
+                .with("errorNotificationIsSent",errorNotificationIsSent);
         
         DBObject setObject = object("$set", partialObject);
         

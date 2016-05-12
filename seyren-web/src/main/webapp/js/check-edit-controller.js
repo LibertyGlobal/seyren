@@ -16,7 +16,7 @@
             allowNoData: false,
             totalMetric: '-',
             notificationDelay: null,
-            notificationInterval: null,
+            errorNotificationIsSent: false,
             lastNotificationSent:null,
             tag: null,
             graphiteSourceUrl: null
@@ -54,6 +54,7 @@
 
         $scope.create = function () {
             $("#createCheckButton").addClass("disabled");
+            $scope.check.errorNotificationIsSent = false;
             Checks.create($scope.check, function () {
                 $("#createCheckButton").removeClass("disabled");
                 $("#editCheckModal").modal("hide");
@@ -70,6 +71,7 @@
 
         $scope.update = function () {
             $("#updateCheckButton").addClass("disabled");
+            $scope.check.errorNotificationIsSent = false;
             Checks.update({checkId: $scope.check.id}, $scope.check, function () {
                 $("#updateCheckButton").removeClass("disabled");
                 $("#editCheckModal").modal("hide");

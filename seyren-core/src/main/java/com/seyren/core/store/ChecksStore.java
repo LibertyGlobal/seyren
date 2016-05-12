@@ -54,5 +54,5 @@ public interface ChecksStore {
     
     Check updateTimeFirstErrorOccured(String checkId, DateTime firstError);
     
-    Check updateTimeLastNotification(String checkId, DateTime lastNotification);
+    Check updateTimeLastNotification(String checkId, DateTime lastNotification, Boolean errorNotificationIsSent);
 }

@@ -18,6 +18,7 @@
  */
 package com.seyren.core.service.notification;
 
+import com.seyren.core.domain.Alert;
 import com.seyren.core.domain.Check;
 import com.seyren.core.domain.AlertType;
 import org.joda.time.DateTime;

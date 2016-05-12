@@ -58,7 +58,7 @@ public class MongoMapper {
         DateTime timeFirstErrorOccured = getDateTime(dbo, "timeFirstErrorOccured");
         DateTime timeLastNotificationSent = getDateTime(dbo, "timeLastNotificationSent");
         BigDecimal notificationDelay = getBigDecimal(dbo, "notificationDelay");
-        BigDecimal notificationInterval = getBigDecimal(dbo, "notificationInterval");
+        boolean errorNotificationIsSent = getBoolean(dbo, "errorNotificationIsSent");
         String tag = getString(dbo, "tag");
         String graphiteSourceUrl = getString(dbo, "graphiteSourceUrl");
         
@@ -79,7 +79,7 @@ public class MongoMapper {
                 .withTimeFirstErrorOccured(timeFirstErrorOccured)
                 .withTimeLastNotificationSent(timeLastNotificationSent)
                 .withNotificationDelay(notificationDelay)
-                .withNotificationInterval(notificationInterval)
+                .withErrorNotificationIsSent(errorNotificationIsSent)
                 .withTag(tag)
                 .withGraphiteSourceUrl(graphiteSourceUrl);
     }
@@ -199,9 +199,7 @@ public class MongoMapper {
         if (check.getNotificationDelay() != null) {
             map.put("notificationDelay", check.getNotificationDelay().toPlainString());            
         }        
-        if (check.getNotificationInterval() != null) {
-            map.put("notificationInterval", check.getNotificationInterval().toPlainString());            
-        }
+        map.put("errorNotificationIsSent", check.errorNotificationIsSent());
         map.put("tag", check.getTag());
         map.put("graphiteSourceUrl",check.getGraphiteSourceUrl());
         return map;
