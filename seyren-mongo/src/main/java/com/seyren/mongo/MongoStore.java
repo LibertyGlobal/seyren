@@ -254,8 +254,6 @@ public class MongoStore implements ChecksStore, AlertsStore, SubscriptionsStore 
     @Override
     public Check saveCheck(Check check) {
         DBObject findObject = forId(check.getId());
-        System.out.println("saveCheck");
-        System.out.println(check.errorNotificationIsSent());
         DateTime lastCheck = check.getLastCheck();
         DateTime timeFirstErrorOccured = check.getTimeFirstErrorOccured();
 

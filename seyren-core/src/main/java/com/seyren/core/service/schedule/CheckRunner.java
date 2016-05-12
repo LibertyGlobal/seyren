@@ -69,7 +69,6 @@ public class CheckRunner implements Runnable {
         }
         
         try {
-            System.out.println("Check Runner");
             Map<String, Optional<BigDecimal>> targetValues = targetChecker.check(check);
             DateTime now = new DateTime();
             BigDecimal warn = check.getWarn();
@@ -78,20 +77,13 @@ public class CheckRunner implements Runnable {
             Integer globalNofiticationDelayInSeconds = seyrenConfig.getAlertNotificationDelayInSeconds();
             
             AlertType worstState;
-//            worstState = AlertType.OK;
             if (check.isAllowNoData()) {
                 worstState = AlertType.OK;
             } else {
                 worstState = AlertType.UNKNOWN;
             }
             
-            //Remember this is CHECK state not ALERT state
-            //System.out.println(check.getState());
-//            System.out.println(worstState.toString());
-            
             List<Alert> interestingAlerts = new ArrayList<Alert>();
-            Integer alertsInErrorCounter = 0;
-            Integer alertsNotInErrorCounter = 0;
             
             for (Entry<String, Optional<BigDecimal>> entry : targetValues.entrySet()) {
                 String target = entry.getKey();
@@ -117,12 +109,6 @@ public class CheckRunner implements Runnable {
                 }
                 
                 AlertType currentState = valueChecker.checkValue(currentValue, warn, error);
-                          
-                if (currentState == AlertType.ERROR || currentState == AlertType.WARN) {
-                    alertsInErrorCounter = targetValues.size() - (targetValues.size() - (alertsInErrorCounter + 1));
-                } else {
-                    alertsNotInErrorCounter = targetValues.size() - alertsInErrorCounter;
-                }
                 
                 if (currentState.isWorseThan(worstState)) {
                     worstState = currentState;
@@ -137,9 +123,7 @@ public class CheckRunner implements Runnable {
                 alertsStore.createAlert(check.getId(), alert);
                 
                 Boolean sendNotification = false;
-                
-                // OK So, the error is in your own code. For some reason this second target always gets a FALSE from the notification settings... You need to find out why..
-                // ALSO - remember to make sure Notifications between ERROR and OK are NOT sent anymore.
+
                 if (singleCheckNotificationDelayInSeconds != null) {
                     sendNotification = notificationServiceSettings.applyNotificationDelayAndIntervalProperties(check, lastState, currentState, now);
                 } else if(globalNofiticationDelayInSeconds != 0) {
@@ -147,37 +131,14 @@ public class CheckRunner implements Runnable {
                 } else if(!stateIsTheSame(lastState, currentState)) {
                     sendNotification = true;
                 }
-                
-//                System.out.println(alertsInErrorCounter);
-//                System.out.println(alertsNotInErrorCounter);
-//                System.out.println(targetValues.size());
-                
-//                if ((alertsInErrorCounter + alertsNotInErrorCounter) == targetValues.size()) {
-//                    check.setTimeLastNotificationSent(now);
-//                }
 
                 if (sendNotification) {
-                    System.out.println("Notification will be sent");
                     interestingAlerts.add(alert);
-                    //lastNotificationSent = true;
-//                    if (check.getTimeLastNotificationSent() == null) {
-//                        System.out.println("Last notification has NOT yet been sent");
-//                        interestingAlerts.add(alert);
-//                    } else if (currentState == AlertType.OK) {
-//                        interestingAlerts.add(alert);
-//                        check.setTimeLastNotificationSent(null);
-//                    }             
                 }
             }
             
             Check updatedCheck = checksStore.updateStateAndLastCheck(check.getId(), worstState, DateTime.now());
-            
-            System.out.println(check.getName());
-            System.out.println(interestingAlerts.size());
-            System.out.println(check.getState());
-            System.out.println(check.getTimeLastNotificationSent() == null);
-            System.out.println(updatedCheck.getState());
-            
+
             if (interestingAlerts.isEmpty()) {
                 return;
             }
@@ -190,30 +151,24 @@ public class CheckRunner implements Runnable {
                 for (NotificationService notificationService : notificationServices) {
                     if (notificationService.canHandle(subscription.getType())) {
                         try {
-                            System.out.println("hierin");
-                            if (!check.errorNotificationIsSent()) {
-                                System.out.println("Send ERROR Notification");
+                            if (updatedCheck.getState() != AlertType.OK && !check.errorNotificationIsSent()) {
                                 check.setTimeLastNotificationSent(now);
                                 check.setErrorNotificationIsSent(true);
                                 checksStore.updateTimeLastNotification(check.getId(), now, true);
                                 notificationService.sendNotification(updatedCheck, subscription, interestingAlerts);
-                            } else if (updatedCheck.getState() == AlertType.OK) {
-                                System.out.println("Send OK Notification");
-                                System.out.println(interestingAlerts.size());
-                                notificationService.sendNotification(updatedCheck, subscription, interestingAlerts);
-                                check.setTimeLastNotificationSent(null);
-                                System.out.println("adjust object");
+                            } 
+                            if (updatedCheck.getState() == AlertType.OK) {
+                                check.setTimeLastNotificationSent(now);
                                 check.setErrorNotificationIsSent(false);
                                 checksStore.updateTimeLastNotification(check.getId(), now, false);
-                                System.out.println("database save");
+                                notificationService.sendNotification(updatedCheck, subscription, interestingAlerts);
                             }
                         } catch (Exception e) {
                             LOGGER.warn("Notifying {} by {} failed.", subscription.getTarget(), subscription.getType(), e);
                         }
                     }
                 }
-            }
-            
+            }          
         } catch (Exception e) {
             LOGGER.warn("{} failed", check.getName(), e);
         }

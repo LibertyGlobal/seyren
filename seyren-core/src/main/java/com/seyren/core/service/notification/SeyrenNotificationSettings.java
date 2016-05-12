@@ -44,10 +44,8 @@ public class SeyrenNotificationSettings implements NotificationServiceSettings {
     
     @Override
     public boolean applyNotificationDelayAndIntervalProperties(Check check, AlertType lastState, AlertType currentState, DateTime now) {
-        System.out.println("ApplySettings");
         Boolean notificationShouldBeSent = false;
         long delayInSeconds;
-        long seyrenNotificationIntervalInSeconds;
         long timeElapsedSinceFirstErrorOccured;
 
         // Check if state changed into ERROR save timestamp
@@ -58,7 +56,6 @@ public class SeyrenNotificationSettings implements NotificationServiceSettings {
         
         // Set Seyren global delay and interval or Check specific delay and interval
         timeElapsedSinceFirstErrorOccured = (now.getMillis() - check.getTimeFirstErrorOccured().getMillis()) / 1000;
-        seyrenNotificationIntervalInSeconds = seyrenConfig.getAlertNotificationIntervalInSeconds();
         delayInSeconds = seyrenConfig.getAlertNotificationDelayInSeconds();
 
         if (check.getNotificationDelay() != null) {
@@ -67,14 +64,12 @@ public class SeyrenNotificationSettings implements NotificationServiceSettings {
         
         // State is still error and must exist longer than delayInSeconds
         if (stateIsTheSame(lastState, currentState) && currentState == AlertType.ERROR && timeElapsedSinceFirstErrorOccured > delayInSeconds) {
-            System.out.println("Delay is passed");
             notificationShouldBeSent = true;
 
         }
 
         // Also send notification if the state changes from ERROR to OK
         if (currentState == AlertType.OK && lastState == AlertType.ERROR && timeElapsedSinceFirstErrorOccured > delayInSeconds) {
-            System.out.println("Error in OK state");
             notificationShouldBeSent = true;
         }
 

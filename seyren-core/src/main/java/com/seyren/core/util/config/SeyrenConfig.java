@@ -86,7 +86,6 @@ public class SeyrenConfig {
     private final int noOfThreads;
     private final String httpNotificationUrl;
     private final int alertNotificationDelayInSeconds;
-    private final int alertNotificationIntervalInSeconds;
     
     public SeyrenConfig() {
         
@@ -96,7 +95,6 @@ public class SeyrenConfig {
         this.graphsEnable = configOrDefault("GRAPHS_ENABLE", "true");
         this.noOfThreads = Integer.parseInt(configOrDefault("SEYREN_THREADS", "8"));
         this.alertNotificationDelayInSeconds = Integer.parseInt(configOrDefault("SEYREN_NOTIFICATION_DELAY","0"));
-        this.alertNotificationIntervalInSeconds = Integer.parseInt(configOrDefault("SEYREN_NOTIFICATION_INTERVAL", "120"));
         
         // Graphite
         this.graphiteUrl = stripEnd(configOrDefault("GRAPHITE_URL", "http://localhost:80"), "/");
@@ -401,11 +399,6 @@ public class SeyrenConfig {
     @JsonIgnore
     public int getGraphiteSocketTimeout() {
         return graphiteSocketTimeout;
-    }
-    
-    @JsonIgnore
-    public int getAlertNotificationIntervalInSeconds () {
-        return alertNotificationIntervalInSeconds;
     }
 
     @JsonIgnore
