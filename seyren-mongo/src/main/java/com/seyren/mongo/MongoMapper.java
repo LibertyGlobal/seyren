@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.lang.Boolean;
 
 import com.google.common.base.Strings;
 import org.bson.types.ObjectId;
@@ -58,7 +59,7 @@ public class MongoMapper {
         DateTime timeFirstErrorOccured = getDateTime(dbo, "timeFirstErrorOccured");
         DateTime timeLastNotificationSent = getDateTime(dbo, "timeLastNotificationSent");
         BigDecimal notificationDelay = getBigDecimal(dbo, "notificationDelay");
-        boolean errorNotificationIsSent = getBoolean(dbo, "errorNotificationIsSent");
+        boolean errorNotificationIsSent = getOptionalBoolean(dbo, "errorNotificationIsSent", false);
         String tag = getString(dbo, "tag");
         String graphiteSourceUrl = getString(dbo, "graphiteSourceUrl");
         
@@ -198,8 +199,8 @@ public class MongoMapper {
         }
         if (check.getNotificationDelay() != null) {
             map.put("notificationDelay", check.getNotificationDelay().toPlainString());            
-        }        
-        map.put("errorNotificationIsSent", check.errorNotificationIsSent());
+        }
+        map.put("errorNotificationIsSent", false);
         map.put("tag", check.getTag());
         map.put("graphiteSourceUrl",check.getGraphiteSourceUrl());
         return map;

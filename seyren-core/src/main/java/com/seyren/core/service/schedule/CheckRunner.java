@@ -151,16 +151,22 @@ public class CheckRunner implements Runnable {
                 for (NotificationService notificationService : notificationServices) {
                     if (notificationService.canHandle(subscription.getType())) {
                         try {
-                            if (updatedCheck.getState() != AlertType.OK && !check.errorNotificationIsSent()) {
+                            if (singleCheckNotificationDelayInSeconds != null || globalNofiticationDelayInSeconds != 0) {
+   
                                 check.setTimeLastNotificationSent(now);
-                                check.setErrorNotificationIsSent(true);
-                                checksStore.updateTimeLastNotification(check.getId(), now, true);
-                                notificationService.sendNotification(updatedCheck, subscription, interestingAlerts);
-                            } 
-                            if (updatedCheck.getState() == AlertType.OK) {
-                                check.setTimeLastNotificationSent(now);
-                                check.setErrorNotificationIsSent(false);
-                                checksStore.updateTimeLastNotification(check.getId(), now, false);
+                                if (updatedCheck.getState() != AlertType.OK && !check.errorNotificationIsSent()) {
+                                    check.setErrorNotificationIsSent(true);
+                                    checksStore.updateTimeLastNotification(check.getId(), now, true);
+                                    notificationService.sendNotification(updatedCheck, subscription, interestingAlerts);
+                                } 
+                                
+                                if (updatedCheck.getState() == AlertType.OK) {
+                                    check.setErrorNotificationIsSent(false);
+                                    checksStore.updateTimeLastNotification(check.getId(), now, false);
+                                    notificationService.sendNotification(updatedCheck, subscription, interestingAlerts);
+                                }
+                                
+                            } else {
                                 notificationService.sendNotification(updatedCheck, subscription, interestingAlerts);
                             }
                         } catch (Exception e) {

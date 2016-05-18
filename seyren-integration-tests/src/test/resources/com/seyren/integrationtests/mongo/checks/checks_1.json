@@ -7,6 +7,7 @@
     "error": "2.0",
     "enabled": true,
     "graphiteSourceUrl":"",
+    "errorNotificationIsSent": false,
     "state": "WARN",
     "lastCheck": { "$date": "2013-07-12T10:10:00.000Z"},
     "subscriptions": [ ]

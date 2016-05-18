@@ -72,8 +72,7 @@ public class SeyrenNotificationSettingsTest {
                 .withTimeFirstErrorOccured(yesterday)
                 .withTimeLastNotificationSent(null);
         
-        when(mockSeyrenConfig.getAlertNotificationDelayInSeconds()).thenReturn(20);                
-        when(mockSeyrenConfig.getAlertNotificationIntervalInSeconds()).thenReturn(100000);                
+        when(mockSeyrenConfig.getAlertNotificationDelayInSeconds()).thenReturn(20);                             
         assertThat(nSS.applyNotificationDelayAndIntervalProperties(check, AlertType.ERROR, AlertType.ERROR, new DateTime()), is(true));
     }
     
@@ -89,8 +88,7 @@ public class SeyrenNotificationSettingsTest {
                 .withTimeFirstErrorOccured(yesterday)
                 .withTimeLastNotificationSent(yesterday);
         
-        when(mockSeyrenConfig.getAlertNotificationDelayInSeconds()).thenReturn(20);                
-        when(mockSeyrenConfig.getAlertNotificationIntervalInSeconds()).thenReturn(10);                
+        when(mockSeyrenConfig.getAlertNotificationDelayInSeconds()).thenReturn(20);                            
         assertThat(nSS.applyNotificationDelayAndIntervalProperties(check, AlertType.ERROR, AlertType.ERROR, new DateTime()), is(true));
     }
     
@@ -106,8 +104,7 @@ public class SeyrenNotificationSettingsTest {
                 .withTimeFirstErrorOccured(yesterday)
                 .withTimeLastNotificationSent(null);
         
-        when(mockSeyrenConfig.getAlertNotificationDelayInSeconds()).thenReturn(20);                
-        when(mockSeyrenConfig.getAlertNotificationIntervalInSeconds()).thenReturn(100000);                
+        when(mockSeyrenConfig.getAlertNotificationDelayInSeconds()).thenReturn(20);                             
         assertThat(nSS.applyNotificationDelayAndIntervalProperties(check, AlertType.ERROR, AlertType.OK, new DateTime()), is(true));
     }
     
@@ -123,8 +120,7 @@ public class SeyrenNotificationSettingsTest {
                 .withTimeFirstErrorOccured(yesterday)
                 .withTimeLastNotificationSent(null);
         
-        when(mockSeyrenConfig.getAlertNotificationDelayInSeconds()).thenReturn(20);                
-        when(mockSeyrenConfig.getAlertNotificationIntervalInSeconds()).thenReturn(100000);                
+        when(mockSeyrenConfig.getAlertNotificationDelayInSeconds()).thenReturn(20);                             
         assertThat(nSS.applyNotificationDelayAndIntervalProperties(check, AlertType.ERROR, AlertType.ERROR, new DateTime()), is(true));
     }
 }

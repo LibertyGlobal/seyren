@@ -402,8 +402,6 @@ public class CheckRunnerTest {
         verify(mockNotificationService).sendNotification(eq(mockCheck), eq(mockSubscription), any(List.class));
     }
     
-    
-    
     @SuppressWarnings("unchecked")
     @Test
     public void globalDelayNotSetAndSpecificDelayNotSetSendNotificationOnStateChange() throws Exception {
@@ -415,7 +413,6 @@ public class CheckRunnerTest {
         when(mockCheck.getWarn()).thenReturn(warn);
         when(mockCheck.getError()).thenReturn(error);
         when(mockCheck.getNotificationDelay()).thenReturn(null);
-        when(mockCheck.getNotificationInterval()).thenReturn(null);
         when(mockSeyrenConfig.getAlertNotificationDelayInSeconds()).thenReturn(0);
         
         when(mockNotificationServiceSettings.applyNotificationDelayAndIntervalProperties(mockCheck, AlertType.OK, AlertType.ERROR, null)).thenReturn(false);
@@ -424,72 +421,4 @@ public class CheckRunnerTest {
 
         verifyZeroInteractions(mockNotificationServiceSettings);
     }    
-
-    
-//    @SuppressWarnings("unchecked")
-//    @Test
-//    public void globalDelaySetAndSpecificDelayNotSetSendNotificationEveryIntervalIfStateIsInErrorLongerThanDelay() throws Exception {
-//        BigDecimal value = BigDecimal.ONE;
-//        BigDecimal warn = BigDecimal.valueOf(2);
-//        BigDecimal error = BigDecimal.valueOf(3);
-//        DateTime now = new DateTime();
-//        
-//        Subscription mockSubscription = mock(Subscription.class);
-//        when(mockSubscription.getType()).thenReturn(SubscriptionType.EMAIL);
-//        
-//        when(mockCheck.getId()).thenReturn("id");
-//        when(mockCheck.isEnabled()).thenReturn(true);
-//        when(mockCheck.getWarn()).thenReturn(warn);
-//        when(mockCheck.getError()).thenReturn(error);
-//        when(mockCheck.getSubscriptions()).thenReturn(Arrays.asList(mockSubscription));        
-//        when(mockCheck.getNotificationDelay()).thenReturn(null);
-//        when(mockCheck.getNotificationInterval()).thenReturn(null);
-//        when(mockSeyrenConfig.getAlertNotificationDelayInSeconds()).thenReturn(10);
-//        when(mockSeyrenConfig.getAlertNotificationIntervalInSeconds()).thenReturn(20);
-//        //DateTimeUtils.setCurrentMillisFixed(10L);
-//        when(mockNotificationServiceSettings.applyNotificationDelayAndIntervalProperties(eq(mockCheck), eq(AlertType.OK), eq(AlertType.ERROR), any(DateTime.class))).thenReturn(false);
-//
-//        Map<String, Optional<BigDecimal>> targetValues = new HashMap<String, Optional<BigDecimal>>();
-//        targetValues.put("target", Optional.of(value));
-//        when(mockTargetChecker.check(mockCheck)).thenReturn(targetValues);
-//        when(mockAlertsStore.getLastAlertForTargetOfCheck("target", "id")).thenReturn(new Alert().withToType(AlertType.WARN));
-//        when(mockValueChecker.checkValue(value, warn, error)).thenReturn(AlertType.ERROR);
-//        
-//        Alert alert = new Alert();
-//        
-//        when(mockAlertsStore.createAlert(eq("id"), any(Alert.class))).thenReturn(alert);
-//        when(mockChecksStore.updateStateAndLastCheck(eq("id"), eq(AlertType.ERROR), any(DateTime.class))).thenReturn(mockCheck);
-//        when(mockSubscription.shouldNotify(any(DateTime.class), eq(AlertType.ERROR))).thenReturn(true);
-//        when(mockNotificationService.canHandle(SubscriptionType.EMAIL)).thenReturn(true);        
-//        
-//        
-//        checkRunner.run();
-//
-//        verify(mockNotificationServiceSettings).applyNotificationDelayAndIntervalProperties(mockCheck, AlertType.OK, AlertType.ERROR, new DateTime());
-//    }
-//    
-//    @SuppressWarnings("unchecked")
-//    @Test
-//    public void globalDelayNotSetAndSpecificDelaySetSendNotificationEveryIntervalIfStateIsInErrorLongerThanDelay() throws Exception {
-//        
-//    }    
-//    
-//    @SuppressWarnings("unchecked")
-//    @Test
-//    public void globalDelaySetAndSpecificDelaySetSendNotificationEveryIntervalIfStateIsInErrorLongerThanDelay() throws Exception {
-//        
-//    }
-//    
-//    @SuppressWarnings("unchecked")
-//    @Test
-//    public void createAlertWithStateInErrorShorterThanGlobalDelayWhichShouldNotSendNotification() throws Exception {
-//        
-//    }    
-//    
-//    @SuppressWarnings("unchecked")
-//    @Test
-//    public void createAlertWithStateInErrorShorterThanSpecificDelayWhichShouldNotNotify() throws Exception {
-//        
-//    }
-    
 }

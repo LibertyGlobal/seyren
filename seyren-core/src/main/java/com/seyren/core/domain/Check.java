@@ -53,7 +53,7 @@ public class Check {
     private List<Subscription> subscriptions = new ArrayList<Subscription>();
     private DateTime timeFirstErrorOccured;
     private DateTime timeLastNotificationSent;
-    private Boolean errorNotificationIsSent;    
+    private boolean errorNotificationIsSent;    
     private BigDecimal notificationDelay;;
     private String tag;
     private String graphiteSourceUrl;
