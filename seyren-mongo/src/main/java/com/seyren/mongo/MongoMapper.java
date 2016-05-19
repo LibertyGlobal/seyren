@@ -59,7 +59,7 @@ public class MongoMapper {
         DateTime timeFirstErrorOccured = getDateTime(dbo, "timeFirstErrorOccured");
         DateTime timeLastNotificationSent = getDateTime(dbo, "timeLastNotificationSent");
         BigDecimal notificationDelay = getBigDecimal(dbo, "notificationDelay");
-        boolean errorNotificationIsSent = getOptionalBoolean(dbo, "errorNotificationIsSent", false);
+        boolean errorNotificationIsSent = getBoolean(dbo, "errorNotificationIsSent");
         String tag = getString(dbo, "tag");
         String graphiteSourceUrl = getString(dbo, "graphiteSourceUrl");
         
