@@ -123,7 +123,7 @@ public class GraphiteHttpClient {
             until = "-1minutes";
         }
         
-        if (graphiteSource != null) {
+        if (!graphiteSource.isEmpty()) {
             graphiteDomain = graphiteSource;
         } else {
             graphiteDomain = GraphiteHttpClient.this.graphiteHost;
@@ -138,7 +138,7 @@ public class GraphiteHttpClient {
                 .addParameter("target", target).build();
 
         HttpGet get = new HttpGet(uri);
-        
+
         try {
             return client.execute(get, jsonNodeHandler, context);
         } catch (Exception e) {
@@ -156,7 +156,7 @@ public class GraphiteHttpClient {
             BigDecimal warnThreshold, BigDecimal errorThreshold) throws Exception {
         String graphiteDomain;
         
-        if (graphiteSource != null) {
+        if (!graphiteSource.isEmpty()) {
             graphiteDomain = graphiteSource;
         } else {
             graphiteDomain = GraphiteHttpClient.this.graphiteHost;
@@ -292,5 +292,4 @@ public class GraphiteHttpClient {
             authState.update(authScheme, credentials);
         }
     }
-    
 }
