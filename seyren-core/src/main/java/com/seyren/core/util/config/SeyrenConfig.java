@@ -87,6 +87,8 @@ public class SeyrenConfig {
     private final String bigPandaAuthBearer;
     private final int noOfThreads;
     private final String httpNotificationUrl;
+    private final int alertNotificationDelayInSeconds;
+    
     public SeyrenConfig() {
         
         // Base
@@ -94,6 +96,8 @@ public class SeyrenConfig {
         this.mongoUrl = configOrDefault("MONGO_URL", "mongodb://localhost:27017/seyren");
         this.graphsEnable = configOrDefault("GRAPHS_ENABLE", "true");
         this.noOfThreads = Integer.parseInt(configOrDefault("SEYREN_THREADS", "8"));
+        this.alertNotificationDelayInSeconds = Integer.parseInt(configOrDefault("SEYREN_NOTIFICATION_DELAY","0"));
+        
         // Graphite
         this.graphiteUrl = stripEnd(configOrDefault("GRAPHITE_URL", "http://localhost:80"), "/");
         this.graphiteUsername = configOrDefault("GRAPHITE_USERNAME", "");
@@ -108,7 +112,6 @@ public class SeyrenConfig {
         this.graphiteSocketTimeout = Integer.parseInt(configOrDefault("GRAPHITE_SOCKET_TIMEOUT", "0"));
 
         // HTTP
-
         this.httpNotificationUrl = configOrDefault("HTTP_NOTIFICATION_URL", "");
 
         // SMTP
@@ -437,6 +440,11 @@ public class SeyrenConfig {
     @JsonIgnore
     public int getNoOfThreads() {
         return noOfThreads;
+    }
+    
+    @JsonIgnore
+    public int getAlertNotificationDelayInSeconds() {
+        return alertNotificationDelayInSeconds;
     }
 
     @JsonIgnore

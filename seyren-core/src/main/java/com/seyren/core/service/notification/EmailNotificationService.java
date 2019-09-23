@@ -50,7 +50,6 @@ public class EmailNotificationService implements NotificationService {
     
     @Override
     public void sendNotification(Check check, Subscription subscription, List<Alert> alerts) {
-        
         try {
             Email email = new Email()
                     .withTo(subscription.getTarget())

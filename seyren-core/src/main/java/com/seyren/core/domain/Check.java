@@ -51,6 +51,12 @@ public class Check {
     private AlertType state;
     private DateTime lastCheck;
     private List<Subscription> subscriptions = new ArrayList<Subscription>();
+    private DateTime timeFirstErrorOccured;
+    private DateTime timeLastNotificationSent;
+    private boolean errorNotificationIsSent;    
+    private BigDecimal notificationDelay;;
+    private String tag;
+    private String graphiteSourceUrl;
     
     public String getId() {
         return id;
@@ -238,5 +244,74 @@ public class Check {
         setSubscriptions(subscriptions);
         return this;
     }
+
+    @JsonSerialize(using = DateTimeSerializer.class)    
+    public DateTime getTimeFirstErrorOccured () {
+        return timeFirstErrorOccured;
+    }
     
+    public void setTimeFirstErrorOccured (DateTime timeFirstErrorOccured) {
+        this.timeFirstErrorOccured = timeFirstErrorOccured;
+    }
+    
+    public Check withTimeFirstErrorOccured (DateTime timeFirstErrorOccured) {
+        setTimeFirstErrorOccured(timeFirstErrorOccured);
+        return this;
+    }
+    
+    @JsonSerialize(using = DateTimeSerializer.class)    
+    public DateTime getTimeLastNotificationSent () {
+        return timeLastNotificationSent;
+    }
+    
+    public void setTimeLastNotificationSent (DateTime timeLastNotificationSent) {
+        this.timeLastNotificationSent = timeLastNotificationSent;
+    }
+    
+    public Check withTimeLastNotificationSent (DateTime timeLastNotificationSent) {
+        setTimeLastNotificationSent(timeLastNotificationSent);
+        return this;
+    }
+    @JsonSerialize(using = BigDecimalSerializer.class)   
+    public BigDecimal getNotificationDelay () {
+        return notificationDelay;
+    }
+    @JsonDeserialize(using = BigDecimalDeserializer.class)
+    public void setNotificationDelay (BigDecimal notificationDelay) {
+        this.notificationDelay = notificationDelay;
+    }
+    public Check withNotificationDelay (BigDecimal notificationDelay) {
+        setNotificationDelay(notificationDelay);
+        return this;
+    }
+    public boolean errorNotificationIsSent () {
+        return errorNotificationIsSent;
+    }
+    public void setErrorNotificationIsSent (Boolean errorNotificationIsSent) {
+        this.errorNotificationIsSent = errorNotificationIsSent;
+    }
+    public Check withErrorNotificationIsSent (Boolean errorNotificationIsSent) {
+        setErrorNotificationIsSent(errorNotificationIsSent);
+        return this;
+    }    
+    public String getTag() {
+        return tag;
+    }
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+    public Check withTag(String tag) {
+        setTag(tag);
+        return this;
+    }
+    public String getGraphiteSourceUrl() {
+        return graphiteSourceUrl;
+    }
+    public void setGraphiteSourceUrl(String graphiteSourceUrl) {
+        this.graphiteSourceUrl = graphiteSourceUrl;
+    }
+    public Check withGraphiteSourceUrl(String graphiteSourceUrl) {
+        setGraphiteSourceUrl(graphiteSourceUrl);
+        return this;
+    }
 }

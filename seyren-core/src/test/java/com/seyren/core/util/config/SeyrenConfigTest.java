@@ -168,4 +168,8 @@ public class SeyrenConfigTest {
         assertThat(config.getNoOfThreads(), is(8));
     }
     
+    @Test
+    public void defaultAlertNotificationDelayIsCorrect() {
+        assertThat(config.getAlertNotificationDelayInSeconds(), is(0));
+    }
 }

@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.lang.Boolean;
 
 import com.google.common.base.Strings;
 import org.bson.types.ObjectId;
@@ -55,6 +56,12 @@ public class MongoMapper {
         for (Object o : list) {
             subscriptions.add(subscriptionFrom((DBObject) o));
         }
+        DateTime timeFirstErrorOccured = getDateTime(dbo, "timeFirstErrorOccured");
+        DateTime timeLastNotificationSent = getDateTime(dbo, "timeLastNotificationSent");
+        BigDecimal notificationDelay = getBigDecimal(dbo, "notificationDelay");
+        boolean errorNotificationIsSent = getBoolean(dbo, "errorNotificationIsSent");
+        String tag = getString(dbo, "tag");
+        String graphiteSourceUrl = getString(dbo, "graphiteSourceUrl");
         
         return new Check().withId(id)
                 .withName(name)
@@ -69,7 +76,13 @@ public class MongoMapper {
                 .withAllowNoData(allowNoData)
                 .withState(state)
                 .withLastCheck(lastCheck)
-                .withSubscriptions(subscriptions);
+                .withSubscriptions(subscriptions)
+                .withTimeFirstErrorOccured(timeFirstErrorOccured)
+                .withTimeLastNotificationSent(timeLastNotificationSent)
+                .withNotificationDelay(notificationDelay)
+                .withErrorNotificationIsSent(errorNotificationIsSent)
+                .withTag(tag)
+                .withGraphiteSourceUrl(graphiteSourceUrl);
     }
     
     public Subscription subscriptionFrom(DBObject dbo) {
@@ -178,6 +191,18 @@ public class MongoMapper {
 
             map.put("subscriptions", dbSubscriptions);
         }
+        if (check.getTimeFirstErrorOccured() != null) {
+            map.put("timeFirstErrorOccured", new Date(check.getTimeFirstErrorOccured().getMillis()));
+        }
+        if (check.getTimeLastNotificationSent() != null) {
+            map.put("timeLastNotificationSent", new Date(check.getTimeLastNotificationSent().getMillis()));
+        }
+        if (check.getNotificationDelay() != null) {
+            map.put("notificationDelay", check.getNotificationDelay().toPlainString());            
+        }
+        map.put("errorNotificationIsSent", false);
+        map.put("tag", check.getTag());
+        map.put("graphiteSourceUrl",check.getGraphiteSourceUrl());
         return map;
     }
     
