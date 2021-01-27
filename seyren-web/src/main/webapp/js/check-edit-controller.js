@@ -3,6 +3,7 @@
     'use strict';
 
     seyrenApp.controller('CheckEditModalController', function CheckEditModalController($scope, $rootScope, Checks, Seyren, Graph, Metrics) {
+
         $scope.master = {
             name: null,
             description: null,
@@ -13,7 +14,26 @@
             enabled: true,
             live: false,
             allowNoData: false,
-            totalMetric: '-'
+            totalMetric: '-',
+            tag: null
+        };
+        
+        $scope.getAllTags = function() {
+            var existing_tags = [];
+            angular.forEach($rootScope.checks.values, function (check) {
+                if (check.tag !== null && existing_tags.indexOf(check.tag) === -1) {
+                    existing_tags.push(check.tag);
+                }
+                
+                function insensitive(s1, s2) {
+                    var s1lower = s1.toLowerCase(),
+                    s2lower = s2.toLowerCase();
+                    return s1lower > s2lower? 1 : (s1lower < s2lower? -1 : 0);
+                }
+                
+                existing_tags.sort(insensitive);
+                $scope.tags = existing_tags;
+            });
         };
 
         $('#editCheckModal').on('shown.bs.modal', function () {
@@ -53,6 +73,7 @@
 
         $rootScope.$on('check:edit', function () {
             var editCheck = Seyren.checkBeingEdited();
+            $scope.getAllTags();
             if (editCheck) {
                 $scope.newCheck = false;
                 $scope.check = editCheck;
@@ -81,7 +102,5 @@
                 });
             }
         });
-
     });
-
 }());
